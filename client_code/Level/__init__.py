@@ -10,7 +10,6 @@ class Level(LevelTemplate):
   def __init__(self, **properties):
     # Set Form properties and Data Bindings.
     self.init_components(**properties)
-    anvil.server.call('init_db')
 
     # Any code you write here will run before the form opens.
 
@@ -19,6 +18,8 @@ class Level(LevelTemplate):
     username = self.text_box_username.text
     password = self.text_box_password.text
     if self.check_box_injection.checked:
-      anvil.server.call("Login_InjectionPosssible", password, username)
+      login_state = anvil.server.call("Login_InjectionPosssible", password, username)
     else:
-      
+      login_state = anvil.server.call("Login_InjectionImpossible", password, username)
+    open_form('user', login_state = login_state, AccountState = anvil.server.call('get_accountNo',username,password) )
+
