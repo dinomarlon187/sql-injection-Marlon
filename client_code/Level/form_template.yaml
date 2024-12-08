@@ -16,12 +16,13 @@ components:
     name: text_box_password
     properties: {}
     type: TextBox
-  - layout_properties: {grid_position: 'TMSHWF,BGGIEA'}
-    name: button_1
+  - event_bindings: {click: button_login_click}
+    layout_properties: {grid_position: 'TMSHWF,BGGIEA'}
+    name: button_login
     properties: {text: Anmelden}
     type: Button
   - layout_properties: {grid_position: 'TMSHWF,RFFKLC'}
-    name: check_box_1
+    name: check_box_injection
     properties: {text: SQL-Injection possible}
     type: CheckBox
   - layout_properties: {grid_position: 'OTQDFU,YIPCYB'}
