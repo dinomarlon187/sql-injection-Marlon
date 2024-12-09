@@ -11,26 +11,25 @@ import re
 
 
 @anvil.server.callable
-def Login_InjectionPosssible(password, username):
+def Login(password, username, possible):
+  if not possible:
+    pattern = "[0-9A-Za-z]+$"
+    if not re.match(pattern, username):
+      return ["Error: Username should only contain letters and numbers!",False]
+    if not re.match(pattern, username):
+      return ["Error: Password should only contain letters and numbers!", False]
   conn = sqlite3.connect(data_files['database'])
   cursor = conn.cursor()
   query = f"SELECT username,isAdmin FROM Users WHERE username = '{username}' AND password = '{password}';"
-  cursor.execute(query)
-  result = cursor.fetchone()
-  conn.close()
-  if result == None:
-    return f"Login Failed: {query}"
-  else:
-    return f"Login Successful: {query}"
+  res = list(cursor.execute(query))
 
-@anvil.server.callable
-def Login_InjectionImpossible(password, username):
-  pattern = "[0-9A-Za-z]+$"
-  if not re.match(pattern, username):
-    return "Error: Username should only contain letters and numbers!"
-  if not re.match(pattern, username):
-    return "Error: Password should only contain letters and numbers!"
-  anvil.server.call("Login_InjectionPosssible",password,username)
+  conn.close()
+  if len(res) == 0:
+    return [f"Login Failed: {query}", False]
+  else:
+    return [f"Login Successful: {query}", True]
+
+
   
 
 
@@ -38,15 +37,13 @@ def Login_InjectionImpossible(password, username):
 @anvil.server.callable
 def get_accountNo(username, password):
   con = sqlite3.connect(data_files["database"])
-  cur = con.cursor()
-  print(username)
+  cursor = con.cursor()
   query = "SELECT AccountNo FROM Users WHERE username = ? AND password = ?"
-  cur.execute(query, (username, password))
-  reslut = cur.fetchone()
-  if reslut == None:
-    return [False , ' ']
-  else:
-    return [True, reslut]
+  res = list(cursor.execute(query, (username, password)))
   con.close()
+  if len(res) == 0:
+    return None
+  else:
+    return res[0]
 
 

@@ -17,9 +17,8 @@ class Level(LevelTemplate):
     """This method is called when the button is clicked"""
     username = self.text_box_username.text
     password = self.text_box_password.text
-    if self.check_box_injection.checked:
-      login_state = anvil.server.call("Login_InjectionPosssible", password, username)
-    else:
-      login_state = anvil.server.call("Login_InjectionImpossible", password, username)
-    open_form('user', login_state = login_state, AccountState = anvil.server.call('get_accountNo',username,password) )
+    login_state = anvil.server.call("Login", password, username, self.check_box_injection.checked)
+    open_form('user',login_list = login_state, AccountNo = anvil.server.call('get_accountNo',username,password))
+
+    
 

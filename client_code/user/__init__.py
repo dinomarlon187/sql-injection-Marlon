@@ -10,6 +10,16 @@ class user(userTemplate):
   def __init__(self, **properties):
     # Set Form properties and Data Bindings.
     self.init_components(**properties)
+    login_list = properties.get('login_list')
+    login_state = login_list[0]
+    if (login_list[1]):
+      accNo = properties.get('AccountNo')
+      if (accNo == None):
+        login_state += ' But AccountNo was not passed.'
+      else:
+        login_state += ' Good work 47.'
+    self.rich_text_1.content = login_state
+      
     
     # Any code you write here will run before the form opens.
 
