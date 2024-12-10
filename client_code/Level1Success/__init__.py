@@ -18,7 +18,7 @@ class Level1Success(Level1SuccessTemplate):
     else:
       
       self.username = anvil.server.call('get_username_from_id', self.accNo)
-      self.rich_text_1.content = f"Welcome {self.username}. Your balance is {anvil.server.call('get_balance',self.username)}."
+      self.rich_text_1.content = f"Welcome {self.username}. Your balance is {anvil.server.call('get_balance',self.accNo)}."
     
     
     

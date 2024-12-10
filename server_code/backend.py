@@ -58,11 +58,11 @@ def get_accountNumber_from_query(url):
         return query_params["AccountNo"][0]
     return None
 @anvil.server.callable
-def get_balance(username):
+def get_balance(id):
   con = sqlite3.connect(data_files["database"])
   cursor = con.cursor()
-  query = "SELECT balance FROM Balances WHERE username = ?"
-  res = list(cursor.execute(query, (username)))
+  query = "SELECT balance FROM Balances WHERE AccountNo = ?"
+  res = list(cursor.execute(query, (id,)))
   return res[0][0]
 
 @anvil.server.callable
