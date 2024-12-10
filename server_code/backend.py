@@ -29,6 +29,12 @@ def Login(password, username, possible):
   else:
     return [f"Login Successful: {query}", True]
 
+@anvil.server.callable
+def IsLoggedIn():
+  if ('login' in anvil.server.session):
+    return anvil.server.session['login']
+  else:
+    return False
 
   
 
@@ -44,6 +50,6 @@ def get_accountNo(username, password):
   if len(res) == 0:
     return None
   else:
-    return res[0]
+    return res[0][0]
 
 
