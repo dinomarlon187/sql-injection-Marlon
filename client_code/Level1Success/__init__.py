@@ -11,25 +11,20 @@ class Level1Success(Level1SuccessTemplate):
   def __init__(self, **properties):
     # Set Form properties and Data Bindings.
     self.init_components(**properties)
+    self.url = anvil.js.window.location.href
+    self.accNo = anvil.server.call('get_accountNumber_from_query',self.url)
+    if (self.accNo == None):
+      self.rich_text_1.content = "Login Successful but AccountNo was not passed."
+    else:
       
-    login_list = properties.get('login_list')
-    login_state = login_list[0]
-    if (login_list[1]):
-      accNo = properties.get('AccountNo')
-      if (accNo == None):
-        login_state += ' But AccountNo was not passed.'
-        anvil.server.session['login'] = True
-      else:
-        anvil.js.window.location.href+= "?AccountNo="+str(accNo)
-        self.button_1.text = "Back"
-        
-
-    self.rich_text_1.content = login_state
+      self.username = anvil.server.call('get_username_from_id', self.accNo)
+      self.rich_text_1.content = f"Welcome {self.username}. Your balance is {anvil.server.call('get_balance',self.username)}."
+    
+    
+    
     
       
     
     # Any code you write here will run before the form opens.
 
-  def button_1_click(self, **event_args):
-    """This method is called when the button is clicked"""
-    open_form('Level1')
+  

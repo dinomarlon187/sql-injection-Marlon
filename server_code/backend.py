@@ -7,6 +7,7 @@ import anvil.server
 import sqlite3
 import hashlib
 import re
+import urllib.parse
 
 
 
@@ -27,7 +28,8 @@ def Login(password, username, possible):
   if len(res) == 0:
     return [f"Login Failed: {query}", False]
   else:
-    return [f"Login Successful: {query}", True]
+    anvil.server.session["login"] = True
+    return ["", True]
 
 @anvil.server.callable
 def IsLoggedIn():
@@ -35,10 +37,6 @@ def IsLoggedIn():
     return anvil.server.session['login']
   else:
     return False
-
-  
-
-
 
 @anvil.server.callable
 def get_accountNo(username, password):
@@ -51,5 +49,27 @@ def get_accountNo(username, password):
     return None
   else:
     return res[0][0]
+@anvil.server.callable
+def get_accountNumber_from_query(url):
+    query_string = url.split('?')[-1] if '?' in url else ''
+    if query_string:
+      query_params = urllib.parse.parse_qs(query_string)
+      if "AccountNo" in query_params:
+        return query_params["AccountNo"][0]
+    return None
+@anvil.server.callable
+def get_balance(username):
+  con = sqlite3.connect(data_files["database"])
+  cursor = con.cursor()
+  query = "SELECT balance FROM Balances WHERE username = ?"
+  res = list(cursor.execute(query, (username)))
+  return res[0][0]
 
+@anvil.server.callable
+def get_username_from_id(id):
+  con = sqlite3.connect(data_files["database"])
+  cursor = con.cursor()
+  query = "SELECT username FROM Users WHERE AccountNo = ?"
+  res = list(cursor.execute(query, (id,)))
+  return res[0][0]
 

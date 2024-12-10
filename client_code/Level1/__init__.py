@@ -11,7 +11,7 @@ class Level1(Level1Template):
     # Set Form properties and Data Bindings.
     self.init_components(**properties)
     if anvil.server.call('IsLoggedIn'):
-      open_form('Level2')
+      open_form('Level1Success')
        
 
     # Any code you write here will run before the form opens.
@@ -21,7 +21,15 @@ class Level1(Level1Template):
     username = self.text_box_username.text
     password = self.text_box_password.text
     login_state = anvil.server.call("Login", password, username, self.check_box_injection.checked)
-    open_form('Level1Success',login_list = login_state, AccountNo = anvil.server.call('get_accountNo',username,password))
+    self.label_message.text = login_state[0]
+    if login_state[1]:
+      res = anvil.server.call('get_accountNo',username,password)
+      if res != None:
+        anvil.js.window.location.href += "?AccountNo=" + str(res)
+      open_form('Level1Success')
+      
+      
+      
 
     
 
