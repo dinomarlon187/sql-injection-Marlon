@@ -16,9 +16,14 @@ class Level1Success(Level1SuccessTemplate):
     if (self.accNo == None):
       self.rich_text_1.content = "Login Successful but AccountNo was not passed."
     else:
+      res = anvil.server.call('get_username_from_id', self.accNo)
+      if res[0]:
+        self.username = res[1]
+        self.balance = res[2]
+        self.rich_text_1.content = f"Welcome {self.username}. Your balance is {self.balance}."
+      else:
+        self.rich_text_1.content = res[1]
       
-      self.username = anvil.server.call('get_username_from_id', self.accNo)
-      self.rich_text_1.content = f"Welcome {self.username}. Your balance is {anvil.server.call('get_balance',self.accNo)}."
     
     
     

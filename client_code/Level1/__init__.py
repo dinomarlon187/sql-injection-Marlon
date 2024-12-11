@@ -12,6 +12,8 @@ class Level1(Level1Template):
     self.init_components(**properties)
     if anvil.server.call('IsLoggedIn'):
       open_form('Level1Success')
+
+      
        
 
     # Any code you write here will run before the form opens.

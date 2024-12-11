@@ -29,6 +29,7 @@ def Login(password, username, possible):
     return [f"Login Failed: {query}", False]
   else:
     anvil.server.session["login"] = True
+    anvil.server.session['accNo'] = anvil.server.call('get_accountNo',username,password)
     return ["", True]
 
 @anvil.server.callable
@@ -36,7 +37,8 @@ def IsLoggedIn():
   if ('login' in anvil.server.session):
     return anvil.server.session['login']
   else:
-    return False
+    anvil.server.session['login'] = False
+    return anvil.server.session['login']
 
 @anvil.server.callable
 def get_accountNo(username, password):
@@ -58,6 +60,9 @@ def get_accountNumber_from_query(url):
         return query_params["AccountNo"][0]
     return None
 @anvil.server.callable
+def get_accountNumber_from_session():
+  return anvil.server.session['accNo']
+@anvil.server.callable
 def get_balance(id):
   con = sqlite3.connect(data_files["database"])
   cursor = con.cursor()
@@ -69,7 +74,12 @@ def get_balance(id):
 def get_username_from_id(id):
   con = sqlite3.connect(data_files["database"])
   cursor = con.cursor()
-  query = "SELECT username FROM Users WHERE AccountNo = ?"
-  res = list(cursor.execute(query, (id,)))
-  return res[0][0]
+  query = f"SELECT Users.username, Balances.balance FROM Users INNER JOIN Balances ON Users.AccountNo = Balances.AccountNo WHERE Users.AccountNo = {id};"
+  res = list(cursor.execute(query))
+  try:
+    hallo = res[0][0]
+    return [True,hallo,res[0][1]]
+  except:
+    return [False,'No account matching the AccountNumber.']
+    
 
