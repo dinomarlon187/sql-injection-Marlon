@@ -29,6 +29,7 @@ class Level1Success(Level1SuccessTemplate):
 
   def button_1_click(self, **event_args):
     anvil.server.call('del_session')
+    
     open_form('Level1')
 
   

@@ -12,6 +12,8 @@ class Level1(Level1Template):
     self.init_components(**properties)
     if anvil.server.call('IsLoggedIn'):
       open_form('Level1Success')
+    else:
+      set_url_hash()
 
       
        
@@ -27,7 +29,7 @@ class Level1(Level1Template):
     if login_state[1]:
       res = anvil.server.call('get_accountNo',username,password)
       if res != None:
-        anvil.js.window.location.href += "?AccountNo=" + str(res)
+        set_url_hash(f'?AccountNo={res}')
       open_form('Level1Success')
       
       

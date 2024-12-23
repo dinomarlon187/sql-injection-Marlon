@@ -101,3 +101,4 @@ def get_username_from_id(id):
 @anvil.server.callable
 def del_session():
   anvil.server.session["login"] = False
+  
