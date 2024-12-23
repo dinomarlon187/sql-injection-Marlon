@@ -62,6 +62,7 @@ def get_accountNumber_from_query(url):
 @anvil.server.callable
 def get_accountNumber_from_session():
   return anvil.server.session['accNo']
+  
 @anvil.server.callable
 def get_balance(id):
   con = sqlite3.connect(data_files["database"])
@@ -73,13 +74,30 @@ def get_balance(id):
 @anvil.server.callable
 def get_username_from_id(id):
   con = sqlite3.connect(data_files["database"])
-  cursor = con.cursor()
-  query = f"SELECT Users.username, Balances.balance FROM Users INNER JOIN Balances ON Users.AccountNo = Balances.AccountNo WHERE Users.AccountNo = {id};"
-  res = list(cursor.execute(query))
+  cur = con.cursor()
+  
+  query_balance = f"SELECT balance FROM Balances WHERE AccountNo = {id}"
+  query_user = f"SELECT username FROM Users WHERE AccountNo = {id}"
+  
   try:
-    hallo = res[0][0]
-    return [True,hallo,res[0][1]]
-  except:
-    return [False,'No account matching the AccountNumber.']
+      balance = cur.execute(query_balance).fetchall()
+      user = cur.execute(query_user).fetchall()
+      
+  except Exception as e:
+      return f"User not found.<br>{query_user}<br>{query_balance}<br>{e}"
+
+  user = [u[0] for u in user if isinstance(u, tuple)]
+  balance = [b[0] for b in balance if isinstance(b, tuple)]
+  user = user[0] if len(user) == 1 else user
+  balance = balance[0] if len(balance) == 1 else balance
+
+  if user:
+      return f"Welcome {user}! Your balance is {balance}."
+  else:
+      return f"User not found.<br>{query_user}<br>{query_balance}"
     
 
+
+@anvil.server.callable
+def del_session():
+  anvil.server.session["login"] = False

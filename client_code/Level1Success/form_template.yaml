@@ -4,6 +4,11 @@ components:
     name: rich_text_1
     properties: {}
     type: RichText
+  - event_bindings: {click: button_1_click}
+    layout_properties: {grid_position: 'ZIZKQE,OSNEQS'}
+    name: button_1
+    properties: {text: Log out}
+    type: Button
   layout_properties: {slot: default}
   name: content_panel
   properties: {}
